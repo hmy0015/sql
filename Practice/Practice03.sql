@@ -148,8 +148,7 @@ from departments d,
      locations l,
      countries c,
      regions r
-where e.department_id = d.department_id
- and  e.employee_id = d.manager_id
+where e.employee_id = d.manager_id
  and  d.location_id = l.location_id
  and  l.country_id = c.country_id
  and  c.region_id = r.region_id;
