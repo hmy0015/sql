@@ -40,6 +40,23 @@ order by salary desc;
  - 출력내용은 매니저아이디, 매니저이름(first_name), 매니저별평균급여,
    매니저별최소급여, 매니저별최대급여입니다.
 (9건) */
+select s.manager_id "매니저아이디",
+        e.first_name "매니저이름",
+        s.avg_s "매니저별 평균급여",
+        s.min_s "매니저별 최소급여",
+        s.max_s "매니저별 최대급여",
+        salary
+from employees e,
+    ( select round(avg(salary),0) avg_s,
+             max(salary) max_s,
+             min(salary) min_s,
+             manager_id
+      from employees
+      where hire_date > '05/12/31'
+      group by manager_id
+      having avg(salary) >= 5000
+    ) s
+where e.employee_id = s.manager_id;    
 
 /* [ 문제4 ]
 각 사원(employee)에 대해서 사번(employee_id), 이름(first_name), 부서명(department_name),
@@ -77,7 +94,7 @@ from ( select rownum rn,
                      d.department_name,
                      e.salary
               from employees e, departments d
-              where hire_date like '05%'
+              where hire_date > '05/12/31'
               and e.department_id = d.department_id
             ) h
       ) r 
