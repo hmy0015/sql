@@ -98,6 +98,8 @@ and hire_date = ( select max(hire_date)
 평균연봉(salary)이 가장 높은 부서 직원들의
 사번(employee_id), 이름(firt_name), 성(last_name)과
 급여(salary), 업무(job_title)를 조회하시오. */   
+
+/* 풀이1 */
 select e.employee_id "사번",
         e.first_name "이름",
         e.last_name "성",
@@ -116,8 +118,8 @@ and e.department_id = ( select d.department_id
                                                  )
                           );
 
------------------------------------------------------
-
+-----------------------------------------------------------------------------
+/* 풀이2 */
 select e.employee_id "사번",
         e.first_name "이름",
         e.last_name "성",
@@ -140,6 +142,7 @@ and es.salary = s.salary;
                           
 /* [ 문제8 ]
 평균 급여(salary)가 가장 높은 부서는? */
+/* 풀이1 */
 select department_name
 from departments dn
 where dn.department_id = ( select d.department_id
@@ -153,8 +156,8 @@ where dn.department_id = ( select d.department_id
                                                  )
                           );
 
----------------------------------------------------
-
+-----------------------------------------------------------------------------
+/* 풀이2 */
 select d.department_name "부서명"
 from departments d,
      ( select avg(salary) salary,
