@@ -31,7 +31,7 @@ where (department_id, salary ) in ( select department_id, max(salary)
                                     group by department_id )
 order by salary desc;
 
-/* ★[ 문제3 ]
+/* [ 문제3 ]
 매니저별로 평균급여 최소급여 최대급여를 알아보려고 한다.
  - 통계대상(직원)은 2005년 이후의 입사자입니다.
  - 매니저별 평균급여가 5000 이상만 출력합니다.
@@ -97,7 +97,27 @@ and hire_date = ( select max(hire_date)
 /* [ 문제7 ]
 평균연봉(salary)이 가장 높은 부서 직원들의
 사번(employee_id), 이름(firt_name), 성(last_name)과
-급여(salary), 업무(job_title)를 조회하시오. */                    
+급여(salary), 업무(job_title)를 조회하시오. */   
+select e.employee_id "사번",
+        e.first_name "이름",
+        e.last_name "성",
+        e.salary "급여",
+        j.job_title "업무"
+from employees e, jobs j
+where e.job_id = j.job_id
+and e.department_id = ( select d.department_id
+                           from departments d,
+                                employees e
+                           where d.department_id = e.department_id
+                           group by d.department_id
+                           having avg(salary) = ( select max(avg(salary))
+                                                  from employees
+                                                  group by department_id
+                                                 )
+                          );
+
+-----------------------------------------------------
+
 select e.employee_id "사번",
         e.first_name "이름",
         e.last_name "성",
@@ -120,16 +140,21 @@ and es.salary = s.salary;
                           
 /* [ 문제8 ]
 평균 급여(salary)가 가장 높은 부서는? */
-select d.department_name "부서명"
-from departments d,
-     employees e
-where d.department_id = e.department_id
-group by d.department_name
-having avg(salary) = ( select max(avg(salary))
-                           from employees
-                           group by department_id
-                      );
-                      
+select department_name
+from departments dn
+where dn.department_id = ( select d.department_id
+                           from departments d,
+                                employees e
+                           where d.department_id = e.department_id
+                           group by d.department_id
+                           having avg(salary) = ( select max(avg(salary))
+                                                  from employees
+                                                  group by department_id
+                                                 )
+                          );
+
+---------------------------------------------------
+
 select d.department_name "부서명"
 from departments d,
      ( select avg(salary) salary,
